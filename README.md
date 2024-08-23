@@ -3,7 +3,7 @@ To run application use follow command from root directory:
 ```
 go run ./cmd/web
 ```
-Run and debug application via VSCode. Put follow config in **snippetbox/.vscode/launch.json** file:
+Run-debug and test application via VSCode. Put follow config in **snippetbox/.vscode/launch.json** file:
 ```json
 {
     "version": "0.2.0",
@@ -15,6 +15,17 @@ Run and debug application via VSCode. Put follow config in **snippetbox/.vscode/
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/web",
             "cwd": "${workspaceFolder}",
+        },
+        {
+            "name": "run tests",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${workspaceFolder}/cmd/web",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-test.v"
+            ]
         }
     ]
 }
