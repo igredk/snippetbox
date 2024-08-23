@@ -18,11 +18,10 @@ func (app *application) routes() http.Handler {
 	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 	})
-	// Take the ui.Files embedded filesystem and convert it to a http.FS type so
-	// that it satisfies the http.FileSystem interface. We then pass that to the
-	// http.FileServer() function to create the file server handler.
+	// Take the ui.Files embedded filesystem and convert it to a http.FS type.
 	fileServer := http.FileServer(http.FS(ui.Files))
-	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileServer))
+	// Static files are contained in the "static" folder of the ui.Files embedded filesystem.
+	router.Handler(http.MethodGet, "/static/*filepath", fileServer)
 
 	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)
 	// common
