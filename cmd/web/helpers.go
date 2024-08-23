@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-playground/form"
+	"github.com/justinas/nosurf"
 )
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
@@ -71,6 +72,7 @@ func (app *application) newTemplateData(r *http.Request) *templateData {
 		// Retrieve and remove the key from the session data.
 		Flash:           app.sessionManager.PopString(r.Context(), "flash"),
 		IsAuthenticated: app.isAuthenticated(r),
+		CSRFToken:       nosurf.Token(r),
 	}
 }
 
