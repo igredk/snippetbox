@@ -23,6 +23,8 @@ func (app *application) routes() http.Handler {
 	// Static files are contained in the "static" folder of the ui.Files embedded filesystem.
 	router.Handler(http.MethodGet, "/static/*filepath", fileServer)
 
+	router.HandlerFunc(http.MethodGet, "/ping", ping)
+
 	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)
 	// common
 	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
