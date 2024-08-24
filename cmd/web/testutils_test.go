@@ -2,11 +2,13 @@ package main
 
 import (
 	"bytes"
+	"html"
 	"io"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 	"time"
 
@@ -14,6 +16,19 @@ import (
 	"github.com/go-playground/form"
 	"github.com/igredk/snippetbox/internal/models/mocks"
 )
+
+// Regexp which captures the CSRF token from the HTML for user signup page.
+var csrfTokenRX = regexp.MustCompile(`<input type='hidden' name='csrf_token' value='(.+)'>`)
+
+func extractCSRFToken(t *testing.T, body string) string {
+	matches := csrfTokenRX.FindStringSubmatch(body)
+	if len(matches) < 2 {
+		t.Fatal("no csrf token found in body")
+	}
+	// html/template package automatically escapes dynamically rendered data
+	// So run token through html.UnescapeString() to get the original token value.
+	return html.UnescapeString(string(matches[1]))
+}
 
 func newTestApplication(t *testing.T) *application {
 	templateCache, err := newTemplateCache()
