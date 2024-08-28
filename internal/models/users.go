@@ -12,6 +12,7 @@ import (
 )
 
 type UserModelInterface interface {
+	Get(id int) (*User, error)
 	Insert(name, email, password string) error
 	Authenticate(email, password string) (int, error)
 	Exists(id int) (bool, error)
@@ -21,12 +22,29 @@ type User struct {
 	ID             int
 	Name           string
 	Email          string
-	HashedPassword []byte
+	HashedPassword []byte `json:"-"`
 	Created        time.Time
 }
 
 type UserModel struct {
 	DB *pgxpool.Pool
+}
+
+func (m *UserModel) Get(id int) (*User, error) {
+	query := `SELECT id, name, email, hashed_password, created FROM users WHERE id = $1`
+
+	rows, _ := m.DB.Query(context.Background(), query, id)
+
+	user, err := pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[User])
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return user, nil
 }
 
 func (m *UserModel) Insert(name, email, password string) error {

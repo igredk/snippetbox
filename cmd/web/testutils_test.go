@@ -38,7 +38,6 @@ func newTestApplication(t *testing.T) *application {
 	}
 
 	formDecoder := form.NewDecoder()
-
 	// And a session manager instance. Use the same settings as production, except a Store for the session manager.
 	// If no store is set, the SCS package will default to using a transient in-memory store.
 	sessionManager := scs.New()
