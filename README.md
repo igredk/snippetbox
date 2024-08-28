@@ -1,5 +1,6 @@
 # snippetbox
-To run application use follow command from root directory:
+To run application use follow command from root directory.
+You can find available flags inside main() func in cmd/web/main.go:
 ```
 go run ./cmd/web
 ```
