@@ -49,6 +49,10 @@ func MaxChars(value string, n int) bool {
 	return utf8.RuneCountInString(value) <= n
 }
 
+func IsEqual[T comparable](value, other T) bool {
+	return value == other
+}
+
 func Matches(value string, rx *regexp.Regexp) bool {
 	return rx.MatchString(value)
 }

@@ -205,14 +205,14 @@ func TestSnippetCreate(t *testing.T) {
 
 	t.Run("Authenticated", func(t *testing.T) {
 		_, _, body := ts.get(t, "/user/login")
-		validCSRFToken := extractCSRFToken(t, body)
+		csrfToken := extractCSRFToken(t, body)
 
 		// Make a POST /user/login request using the extracted CSRF token and
 		// credentials from the mock user model to authenticate them.
 		form := url.Values{}
 		form.Add("email", "alice@example.com")
 		form.Add("password", "pa$$word")
-		form.Add("csrf_token", validCSRFToken)
+		form.Add("csrf_token", csrfToken)
 		ts.postForm(t, "/user/login", form)
 
 		code, _, body := ts.get(t, "/snippet/create")
