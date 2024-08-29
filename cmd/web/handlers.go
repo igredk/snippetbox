@@ -214,6 +214,11 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 	// Add the ID of the current user to the session, so that they are now 'logged in'.
 	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
 
+	redirectPath := app.sessionManager.PopString(r.Context(), "redirectPathAfterLogin")
+	if redirectPath != "" {
+		http.Redirect(w, r, redirectPath, http.StatusSeeOther)
+	}
+
 	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 }
 
