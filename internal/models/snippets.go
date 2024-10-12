@@ -48,7 +48,6 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
     WHERE expires > NOW() AND id = $1`
 
 	rows, _ := m.DB.Query(context.Background(), query, id)
-	defer rows.Close()
 
 	snippet, err := pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[Snippet])
 	if err != nil {
@@ -67,7 +66,6 @@ func (m *SnippetModel) Latest() ([]*Snippet, error) {
     WHERE expires > NOW() ORDER BY id DESC LIMIT 10`
 
 	rows, _ := m.DB.Query(context.Background(), query)
-	defer rows.Close()
 
 	snippets, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[Snippet])
 	if err != nil {
